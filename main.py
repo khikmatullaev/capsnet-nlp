@@ -5,7 +5,7 @@ from keras.datasets import imdb
 from keras.preprocessing import sequence
 from keras.models import Model
 
-from vendor.Capsule.Capsule_Keras import *
+from Capsule_Keras import *
 
 gru_len = 256
 Routings = 3
