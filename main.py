@@ -15,8 +15,8 @@ dropout_p = 0.25
 rate_drop_dense = 0.28
 
 max_features = 20000
-maxlen = 1000
-embed_size = 256
+maxlen = 400
+embed_size = 40
 
 def get_model():
     input1 = Input(shape=(maxlen,))
@@ -52,7 +52,7 @@ def get_model():
     return model
 
 
-def load_imdb(maxlen=1000):
+def load_imdb(maxlen=400):
     (x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=maxlen)
     x_train = sequence.pad_sequences(x_train, maxlen=maxlen)
     x_test = sequence.pad_sequences(x_test, maxlen=maxlen)
@@ -64,8 +64,8 @@ def main():
 
     model = get_model()
 
-    batch_size = 32
-    epochs = 40
+    batch_size = 200
+    epochs = 20
 
     model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs,
               validation_data=(x_test, y_test))
