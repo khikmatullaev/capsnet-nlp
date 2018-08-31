@@ -1,3 +1,4 @@
+import numpy as np
 from keras.layers import K, Activation
 from keras.engine import Layer
 from keras.layers import LeakyReLU, Dense, Input, Embedding, Dropout, Bidirectional, GRU, Flatten, SpatialDropout1D
@@ -54,22 +55,30 @@ def get_model():
 
 def load_imdb(maxlen=400):
     (x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=maxlen)
-    x_train = sequence.pad_sequences(x_train, maxlen=maxlen)
-    x_test = sequence.pad_sequences(x_test, maxlen=maxlen)
-    return x_train, y_train, x_test, y_test
+    x_train = sequence.pad_sequences(x_train, maxlen=maxlen, padding='post')
+    x_test = sequence.pad_sequences(x_test, maxlen=maxlen, padding='post')
+
+    X = np.concatenate((np.array(x_train), np.array(x_test)))
+    Y = np.concatenate((np.array(y_train), np.array(y_test)))
+
+    return (X, Y)
 
 
 def main():
-    x_train, y_train, x_test, y_test = load_imdb()
+    X, Y = load_imdb()
 
     model = get_model()
 
     batch_size = 200
     epochs = 20
 
-    model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs,
-              validation_data=(x_test, y_test))
-
+    model.fit(x=X,
+              y=Y,
+              validation_split=0.2,
+              batch_size=batch_size,
+              epochs=epochs,
+              shuffle=True,
+              verbose=1)
 
 if __name__ == '__main__':
     main()
